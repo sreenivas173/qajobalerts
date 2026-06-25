@@ -1,0 +1,30 @@
+name: QA Job Alert
+
+on:
+  workflow_dispatch:
+
+  schedule:
+    - cron: '30 3 * * *'
+    - cron: '30 11 * * *'
+
+jobs:
+
+  send-alert:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - run: npm install
+
+      - run: node qajobalerts/sendJobs.js
+        env:
+          EMAIL_USER: ${{ secrets.EMAIL_USER }}
+          EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
+          EMAIL_TO: ${{ secrets.EMAIL_TO }}
